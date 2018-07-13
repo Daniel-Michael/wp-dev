@@ -13,6 +13,7 @@ class Search {
     this.events();
     this.isOverlayOpen = false;
     this.isSpinnerVisible = false;
+    this.previousValue;
     this.typingTimer;
   }
 
@@ -21,17 +22,28 @@ class Search {
     this.openButton.on("click", this.openOverlay.bind(this)); // open overlay event.
     this.closeButton.on("click", this.closeOverlay.bind(this)); // close overlay event
     $(document).on("keydown", this.keyPressDispatcher.bind(this));
-    this.searchField.on("keydown", this.typingLogic.bind(this));
+    this.searchField.on("keyup", this.typingLogic.bind(this));
   }
 
   // 3. methods
   typingLogic () {
-    clearTimeout(this.typingTimer);
-    if(!this.isSpinnerVisible) {
-      this.resultsDiv.html('<div class="spinner-overlay"><d/iv>');
-      this.isSpinnerVisible = true;
+    if(this.searchField.val() != this.previousValue) {
+      clearTimeout(this.typingTimer);
+
+      if(this.searchField.val()) {
+        if(!this.isSpinnerVisible) {
+          this.resultsDiv.html('<div class="spinner-overlay"><d/iv>');
+          this.isSpinnerVisible = true;
+        }
+        this.typingTimer = setTimeOut(this.getResults.bind(this), 2000);
+      } else {
+        this.resultsDiv.html('');
+        this.isSpinnerVisible = false;
+      }
+    
     }
-    this.typingTimer = setTimeOut(this.getResults.bind(this), 2000);
+    
+    this.previousValue = this.searchField.val();
   }
 
   getResults() {
@@ -40,7 +52,7 @@ class Search {
   }
 
   keyPressDispatcher(e) {
-    if(e.keyCode == 83 && !this.isOverlayOpen) {
+    if(e.keyCode == 83 && !this.isOverlayOpen && !$("input, textarea".is(':focus'))) {
     this.openOverlay();
     }
 
