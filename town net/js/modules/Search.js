@@ -5,12 +5,14 @@ class Search {
 
   // 1. describer and initiate our Search object
   constructor() {
+    this.resultsDiv = $("#search-overlay__results");
     this.openButton = $(".js-search-trigger");
     this.closeButton = $(".search-overlay__close");
     this.searchOverlay = $(".search-overlay");
     this.searchField = $("search-term");
     this.events();
     this.isOverlayOpen = false;
+    this.isSpinnerVisible = false;
     this.typingTimer;
   }
 
@@ -25,9 +27,17 @@ class Search {
   // 3. methods
   typingLogic () {
     clearTimeout(this.typingTimer);
-    this.typingTimer = setTimeOut(function() {console.log("Timeout test");}, 2000);
+    if(!this.isSpinnerVisible) {
+      this.resultsDiv.html('<div class="spinner-overlay"><d/iv>');
+      this.isSpinnerVisible = true;
+    }
+    this.typingTimer = setTimeOut(this.getResults.bind(this), 2000);
   }
 
+  getResults() {
+    this.resultsDiv.html("real search results here");
+    this.isSpinnerVisible = false;
+  }
 
   keyPressDispatcher(e) {
     if(e.keyCode == 83 && !this.isOverlayOpen) {
