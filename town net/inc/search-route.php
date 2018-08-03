@@ -9,10 +9,11 @@ function townRegisterSearch() {
     ));
 }
 
-function townSearchResults() {
+function townSearchResults($data) {
     $officials = new WP_Query(array(
-        'post_type' => 'professor'
-    );
+        'post_type' => 'professor',
+        's' => $data['term']
+    0);
 
     $officialResults = array();
 
