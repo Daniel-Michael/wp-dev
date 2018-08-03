@@ -10,5 +10,18 @@ function townRegisterSearch() {
 }
 
 function townSearchResults() {
-    return 'Congrats on creating a route';
+    $officials = new WP_Query(array(
+        'post_type' => 'professor'
+    );
+
+    $officialResults = array();
+
+    while($officials->have_posts()) {
+        $officials->the_post();
+        array_push($officialResults, array(
+            'title' => get_the_title(),
+            'permalink' => get_the_permalink()
+        ));
+    }
+    return $officialResults;
 }
