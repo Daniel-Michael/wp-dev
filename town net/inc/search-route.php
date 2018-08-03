@@ -10,19 +10,24 @@ function townRegisterSearch() {
 }
 
 function townSearchResults($data) {
-    $officials = new WP_Query(array(
-        'post_type' => 'professor',
-        's' => $data['term']
-    0);
+    $mainQuery = new WP_Query(array(
+        'post_type' => array ('post', 'page','officials'),
+        's' => sanitize_text_field($data['term'])
+    ));
 
-    $officialResults = array();
+    $results = array(
+        'generalInfo' => x,
+        'officials' => x,
+        'attractions'
+        
+    );
 
-    while($officials->have_posts()) {
-        $officials->the_post();
-        array_push($officialResults, array(
+    while($mainQuery->have_posts()) {
+        $mainQuery->the_post();
+        array_push($results, array(
             'title' => get_the_title(),
             'permalink' => get_the_permalink()
         ));
     }
-    return $officialResults;
+    return $results;
 }
